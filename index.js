@@ -3,24 +3,23 @@ const express = require('express')
 const mustacheExpress = require('mustache-express');
 require('dotenv').config()
 
+const { BASE_URL, PORT } = process.env;
+
 const { readdir, isFile, getSubtitle } = require('./util');
 
 const app = express()
-const port = 8080
 
-const baseUrl = process.env.BASE_URL;
-
-app.use(express.static(baseUrl));
+app.use(express.static(BASE_URL));
 app.engine('html', mustacheExpress());
 
 
 app.get('/', async (req, res) => {
-  const fileOrFolder = path.join(baseUrl, req.query.p || '');
+  const fileOrFolder = path.join(BASE_URL, req.query.p || '');
 
   const _isFile = await isFile(fileOrFolder);
 
   if (_isFile && fileOrFolder.includes('.mp4')) {
-    const movie = fileOrFolder.replace(baseUrl, '');
+    const movie = fileOrFolder.replace(BASE_URL, '');
 
     return res.render('video.html', { movie })
   }
@@ -29,6 +28,6 @@ app.get('/', async (req, res) => {
   res.render('index.html', { files });
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Example app listening at http://localhost:${PORT}`)
 });

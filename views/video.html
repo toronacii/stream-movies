@@ -20,18 +20,25 @@
         }
 
         video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
             width: 100%;
             height: 100%;
+        }
+
+        .buttons {
+            z-index: 10;
+        }
+
+        button:hover {
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
+    <div class="buttons">
+        <button class="normal">Normal</button>
+        <button class="playback05">+0.5</button>
+    </div>
     <video id="video" controls>
         <source src="{{ movie }}" type="video/mp4">
     </video>
@@ -118,11 +125,24 @@
             // https://www.iandevlin.com/blog/2015/02/javascript/dynamically-adding-text-tracks-to-html5-video
             var video = document.querySelector('video');
             var subtitle = document.getElementById('subtitle');
+            const normal = document.querySelector('.normal');
+            const playback05 = document.querySelector('.playback05');
             var track = video.addTextTrack('subtitles', subtitle.dataset.label, subtitle.dataset.lang);
             track.mode = "showing";
             quick_and_dirty_vtt_or_srt_parser(subtitle.innerHTML).map(function (cue) {
                 track.addCue(cue);
             });
+
+            normal.onclick = function(ev) {
+                ev.preventDefault();
+                video.playbackRate = 1;
+            }
+
+            playback05.onclick = function(ev) {
+                ev.preventDefault();
+                video.playbackRate += 0.5;
+            }
+
         }
     </script>
 
